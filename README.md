@@ -16,12 +16,27 @@ and divides into three main categories: presentation, application, data. Each of
 
 
 #### Role functionality
+The application provides access for the customer through the endpoints, which let ability monitor and interact with the application.
+The web service utilizes the standard HTTP verbs, and arranges a set of the REST endpoints that cover the usual Create, Read, Update, and Delete (CRUD) operations:
+
 - User
-    - `**Add** cinema halls, movies and movie sessions.`  
-- Admin 
-    - `**Add** tickets to cart, retrieve and overlook order history.`
+- Admin
 - Unauthorized
-    - `Register new profile.`
+
+
+| HTTP<br/>VERB | DESCRIPTION                                                | ROLE PERMISSION | Request Body                                                                                                                                | URL                                                     |
+|---------------|------------------------------------------------------------|-----------------|---------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------|
+| `POST`        | Enables to define custom backend and frontend templates.   | Permit All      | `{"email":"your@email.com", "password":"your password", "repeatPassword":"your password"}`                                                  | `/register`                                             |
+| `GET`         | Enables to define custom backend and frontend templates.   | ADMIN, USER     | `None`                                                                                                                                      | `/cinema-halls`, `/movies`, `/movie-sessions/available` |
+| `GET`         | Enables to define custom backend and frontend templates.   | ADMIN           | `None`                                                                                                                                      | `/users/by-email`                                       |
+| `POST`        | Enables to define custom backend and frontend templates.   | ADMIN           | `{"capacity":integer, "description":"Cinema hall description"}`,<br/> `{"title":"Movie title", "description":"Movie description"}`,<br/> `` | `/cinema-halls`,<br/> `/movies`,<br/> `/movie-sessions`                                                      |
+| `DELETE`      | Enables to define custom backend and frontend templates.   |                 | `false`                                                                                                                                     | No                                                      |
+| `DELETE`      | Enables to define custom backend and frontend templates.   | Permit All      | `false`                                                                                                                                     | No                                                      |
+| `DELETE`      | Enables to define custom backend and frontend templates.   | Permit All      | `false`                                                                                                                                     | No                                                      |
+| `DELETE`      | Enables to define custom backend and frontend templates.   | Permit All      | `false`                                                                                                                                     | No                                                      |
+| `DELETE`      | Enables to define custom backend and frontend templates.   | Permit All      | `false`                                                                                                                                     | No                                                      |
+| `DELETE`      | Enables to define custom backend and frontend templates.   | Permit All      | `false`                                                                                                                                     | No                                                      |
+
 
 ## :wrench: Application technologies used
 

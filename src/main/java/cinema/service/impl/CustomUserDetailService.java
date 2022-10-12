@@ -1,7 +1,7 @@
 package cinema.service.impl;
 
+import cinema.model.User;
 import cinema.service.UserService;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,15 +18,15 @@ public class CustomUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email)
             throws UsernameNotFoundException {
-        cinema.model.User user = userService.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User is not "
-                        + "found by email: " + email));
-        User.UserBuilder builder = User.withUsername(email);
-        builder.password(user.getPassword());
-        builder.authorities(user.getRoles()
-                .stream()
-                .map(r -> r.getRoleName().name())
-                .toArray(String[]::new));
-        return builder.build();
+        User user = userService.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User with email: "
+                        + email + " not found"));
+        return org.springframework.security.core.userdetails.User
+                .withUsername(email)
+                .password(user.getPassword())
+                .roles(user.getRoles().stream()
+                        .map(role -> role.getRoleName().name())
+                        .toArray(String[]::new)).build();
+
     }
 }
