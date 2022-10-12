@@ -12,30 +12,32 @@ and divides into three main categories: presentation, application, data. Each of
 - The application layer (Service). A business logic layer drives the core functionalities of the application.
 - The data access layer (DAO). This layer is responsible for interacting with databases to save and restore the application data via HQL queries.
 
-
+![3-tier](https://user-images.githubusercontent.com/96411307/195352492-87b76182-054a-496f-9553-c87b7846fe05.png)
 
 
 #### Role functionality
 The application provides access for the customer through the endpoints, which let ability monitor and interact with the application.
-The web service utilizes the standard HTTP verbs, and arranges a set of the REST endpoints that cover the usual Create, Read, Update, and Delete (CRUD) operations:
+The web service utilizes the standard HTTP verbs, and arranges a set of the REST endpoints that cover the usual Create, Read, Update, and Delete (CRUD) operations.
 
+The application supports three type of roles:
 - User
 - Admin
-- Unauthorized
+- Unauthorized(default)
 
+Each role has limited access to the certain resources:
 
-| HTTP<br/>VERB | DESCRIPTION                                                | ROLE PERMISSION | Request Body                                                                                                                                | URL                                                     |
-|---------------|------------------------------------------------------------|-----------------|---------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------|
-| `POST`        | Enables to define custom backend and frontend templates.   | Permit All      | `{"email":"your@email.com", "password":"your password", "repeatPassword":"your password"}`                                                  | `/register`                                             |
-| `GET`         | Enables to define custom backend and frontend templates.   | ADMIN, USER     | `None`                                                                                                                                      | `/cinema-halls`, `/movies`, `/movie-sessions/available` |
-| `GET`         | Enables to define custom backend and frontend templates.   | ADMIN           | `None`                                                                                                                                      | `/users/by-email`                                       |
-| `POST`        | Enables to define custom backend and frontend templates.   | ADMIN           | `{"capacity":integer, "description":"Cinema hall description"}`,<br/> `{"title":"Movie title", "description":"Movie description"}`,<br/> `` | `/cinema-halls`,<br/> `/movies`,<br/> `/movie-sessions`                                                      |
-| `DELETE`      | Enables to define custom backend and frontend templates.   |                 | `false`                                                                                                                                     | No                                                      |
-| `DELETE`      | Enables to define custom backend and frontend templates.   | Permit All      | `false`                                                                                                                                     | No                                                      |
-| `DELETE`      | Enables to define custom backend and frontend templates.   | Permit All      | `false`                                                                                                                                     | No                                                      |
-| `DELETE`      | Enables to define custom backend and frontend templates.   | Permit All      | `false`                                                                                                                                     | No                                                      |
-| `DELETE`      | Enables to define custom backend and frontend templates.   | Permit All      | `false`                                                                                                                                     | No                                                      |
-| `DELETE`      | Enables to define custom backend and frontend templates.   | Permit All      | `false`                                                                                                                                     | No                                                      |
+| HTTP<br/>VERB | DESCRIPTION                                                                                                                                 | ROLE PERMISSION |                                            Request URL pattern                                             |                                                                                                            Request Body                                                                                                            |                                    URL                                     |
+|:-------------:|---------------------------------------------------------------------------------------------------------------------------------------------|:---------------:|:----------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------:|
+|    `POST`     | Register a new account with role USER.                                                                                                      |   Permit All    |                                                                                                            |                                                                     `{"email":"your@email.com", "password":"your password", "repeatPassword":"your password"}`                                                                     |                                `/register`                                 |
+|     `GET`     | Retrieve information about cinema halls, movies or available movies sessions by movie identifier.                                           |   ADMIN, USER   | a) `/cinema-halls`;<br/> b) `/movies`;<br/> c) `/movie-sessions/available?movieId=integer&date=dd.mm.yyyy` |                                                                                                               `None`                                                                                                               | a) `/cinema-halls`;<br/> b) `/movies`;<br/> c) `/movie-sessions/available` |
+|     `GET`     | Find a particular user by email.                                                                                                            |      ADMIN      |                                   `/users/by-email?email=your@email.com`                                   |                                                                                                               `None`                                                                                                               |                             `/users/by-email`                              |
+|    `POST`     | Add a new cinema hall, movie, or movie session via request body.                                                                            |      ADMIN      |                                                                                                            | a) `{"capacity":integer, "description":"Cinema hall description"}`;<br/> b) `{"title":"Movie title", "description":"Movie description"}`;<br/> c) `{"movieId":integer, "cinemaHallId":integer, "showTime": "yyyy-mm-ddThh:mm:ss"}` |      a) `/cinema-halls`;<br/> b) `/movies`;<br/> c) `/movie-sessions`      |
+|     `PUT`     | Update an existing movie session by input movie session identifier.                                                                         |      ADMIN      |                                                                                                            |                                                                          `{"movieId":integer, "cinemaHallId":integer, "showTime": "yyyy-mm-ddThh:mm:ss"}`                                                                          |                           `/movie-sessions/{id}`                           |
+|   `DELETE`    | Delete an existing movie session by input movie session identifier.                                                                         |      ADMIN      |                                                                                                            |                                                                                                               `None`                                                                                                               |                           `/movie-sessions/{id}`                           |
+|     `GET`     | a) Retrieve order history based on current authenticated user.<br/> b) Find a particular shopping cart based on current authenticated user. |      USER       |                                                                                                            |                                                                                                               `None`                                                                                                               |              a) `/orders`;<br/> b) `/shopping-carts/by-user`               |
+|    `POST`     | Accomplish a particular order based on current authenticated user.                                                                          |      USER       |                                                                                                            |                                                                                                               `None`                                                                                                               |                             `/orders/complete`                             |
+|     `PUT`     | Update an existing shopping based on current authenticated user and by input movie session identifier.                                      |      USER       |                          `/shopping-carts/movie-sessions?movieSessionId=integer`                           |                                                                                                              `false`                                                                                                               |                      `/shopping-carts/movie-sessions`                      |
+
 
 
 ## :wrench: Application technologies used
@@ -48,3 +50,24 @@ The web service utilizes the standard HTTP verbs, and arranges a set of the REST
 - Spring Framework Core
 - Spring MVC
 - Spring Security
+
+## How to run this application? 
+
+1. Clone this project to your IDE as Maven project then open it.
+2. Check a pom.xml file if any errors are occurred - fix them.
+3. Configure a Tomcat. In the deployment: add the artifact cinema-application:war exploded and Set application context field as "/". Use a URL as http://localhost:8080/
+4. Install and configure a MySQL with Workbench.
+5. Create a schema in the MySQL Workbench.
+6. At the src.main.resources.db.properties use a driver, path to the schema, your username and password, for connection to DB.
+7. Run the project.
+8. To test the application use a Postman or analog platform.
+
+On the initial start up the application creates a user with role _ADMIN_ which has basic email = "admin@cinema.com" and password = "admin123".
+You have ability to create a new User with role User(by default). For example, to be authorized through the Postman, you must add a new header, then enter your email and password which you used during registration process.
+
+## Application structure
+
+![structure](https://user-images.githubusercontent.com/96411307/195362127-6f2243d5-6124-4d10-9cdf-092dc7fcb4c1.png)
+
+## Author
+_Oleksii Akishev_
