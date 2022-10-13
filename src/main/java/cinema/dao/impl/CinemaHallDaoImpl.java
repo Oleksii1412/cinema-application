@@ -11,4 +11,6 @@ public class CinemaHallDaoImpl extends AbstractDao<CinemaHall> implements Cinema
     public CinemaHallDaoImpl(SessionFactory factory) {
         super(factory, CinemaHall.class);
     }
+
+
 }

@@ -37,4 +37,12 @@ public class Role {
         ADMIN,
         USER
     }
+
+    @Override
+    public String toString() {
+        return "Role{"
+                + "id=" + id
+                + ", roleName=" + roleName
+                + '}';
+    }
 }
